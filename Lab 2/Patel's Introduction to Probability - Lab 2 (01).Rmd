@@ -1,0 +1,254 @@
+---
+title: "lab 2"
+author: "Harsh Patel"
+date: "2024-09-12"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r}
+#1
+#define parameters
+prob.heads = 0.6
+number.tosses = 5
+
+#simulate the coin tosses
+outcomes = sample(c(0, 1), size = number.tosses, prob = c(1 - prob.heads, prob.heads), replace = TRUE)
+
+#view the results
+table(outcomes)
+```
+```{r}
+
+#store the results as a single number
+total.heads = sum(outcomes)
+total.heads
+
+```
+
+# b) In the sample() function, the number 0 is used to represent tails and 1 to represent heads. The command c(0, 1) is sampled based on the probabilities c(1 - prob.heads, prob.heads), with each number corresponding to the probability of tails or heads
+
+# c) Sampling without replacement would limit us to just two coin tosses, as the vector only contains two elements (0 and 1). Sampling with replacement, however, allows for each toss to be independent, meaning every toss can result in either heads or tails, regardless of previous outcomes.
+
+# d) Representing tails as 0 and heads as 1 makes it simple to use sum() to count the number of heads. If represented by letters, sum() would require more complex syntax, but it’s still possible, as shown in the Lab Notes.
+
+# e) Yes, It’s reasonable to expect variation in the number of heads in five coin tosses due to the inherent randomness of the process. Even with a fixed probability for heads, the number of heads can range from 0 to 5 in any set of tosses.
+
+```{r}
+#define parameters
+prob.heads = 0.6
+number.tosses = 5
+number.replicates = 50
+
+#create empty vector to store outcomes
+outcomes = vector("numeric", number.replicates)
+
+#set the seed for a pseudo-random sample
+set.seed(2018)
+
+#simulate the coin tosses
+for(k in 1:number.replicates){
+  
+  outcomes.replicate = sample(c(0, 1), size = number.tosses,
+                      prob = c(1 - prob.heads, prob.heads), replace = TRUE)
+  
+  outcomes[k] = sum(outcomes.replicate)
+}
+
+#view the results
+outcomes
+addmargins(table(outcomes))
+
+heads.3 = (outcomes == 3)
+table(heads.3)
+```
+
+#b) In the fourth trial of the experiment, 2 heads were observed.
+```{r}
+outcomes[4]
+```
+
+#c) Out of 50 trials, exactly 3 heads appeared in 20 of the trials.
+
+#d) The estimated probability of getting exactly 3 heads is 20/50 = 0.40.
+
+#e) When the experiment was repeated 10,000 times, the new estimated probability was 3521/10000 = 0.352.
+
+```{r}
+#define parameters
+prob.heads = 0.6
+number.tosses = 5
+number.replicates = 10000
+
+#create empty vector to store outcomes
+outcomes = vector("numeric", number.replicates)
+
+#set the seed for a pseudo-random sample
+set.seed(2018)
+
+#simulate the coin tosses
+for(k in 1:number.replicates){
+  
+  outcomes.replicate = sample(c(0, 1), size = number.tosses,
+                      prob = c(1 - prob.heads, prob.heads), replace = TRUE)
+  
+  outcomes[k] = sum(outcomes.replicate)
+}
+
+#view the results
+outcomes
+addmargins(table(outcomes))
+
+heads.3 = (outcomes == 3)
+table(heads.3)
+```
+
+#f) There are 10 possible sequences of getting exactly 3 heads in 5 tosses, such as TTHHH, HTTHH, HHTTH, HHHTT, THTHH, THHTH, THHHT, HTHHT, HTHTH, HHTHT. Since these are disjoint outcomes, the addition rule applies, and the probability of each sequence is equal. The exact probability of observing 3 heads in 5 tosses is 10 × (0.60)^3 × (0.40)^2 = 0.346.
+
+```{r}
+prob.heads = 0.6
+
+10*prob.heads^3*(1-prob.heads)^2
+```
+
+#g) The exact probability calculated algebraically is 0.346. The estimate from 50 trials was 0.40, and the estimate from 10,000 trials was 0.352. As the number of trials increases, the estimated probability gets closer to the exact value derived from algebraic methods.
+
+
+#3  The probability that at least one person tests positive is the complement of all tests being negative. The probability of 150 negative tests is calculated using the multiplication rule: 1 − (0.988)^150 = 1 − 0.16 = 0.84.
+
+```{r}
+prob.false.positive = 0.012
+prob.true.negative = 1 - prob.false.positive
+
+1 - prob.true.negative^150
+```
+#i)  An employee can either test positive or negative. Since all employees are drug-free, positive results are false positives, while negative results are true negatives.
+
+#ii)  The probability of a false positive is 0.012, while the probability of a true negative is 1 − 0.012 = 0.988.
+
+#iii)  For convenience in counting, positive results are represented by 1 and negative results by 0.`
+
+#b)  Yes, at least one employee tested positive in this set of tests, with two employees testing positive.
+
+```{r}
+#define parameters
+prob.false.positive = 0.012
+number.employees = 150
+
+#set the seed for a pseudo-random sample
+set.seed(2018)
+
+#simulate the tests
+results = sample(c(0,1), size = number.employees,
+            prob = c(1 - prob.false.positive, prob.false.positive),
+            replace = TRUE)
+
+#view the results
+table(results)
+```
+```{r}
+sum(results)
+```
+#c)  The estimated probability of at least one positive test result among 150 drug-free employees is 83,718/100,000 = 0.837.
+
+```{r}
+#define parameters
+prob.false.positive = 0.012
+number.employees = 150
+number.replicates = 100000
+
+#create empty vector to store results
+results = vector("numeric", number.replicates)
+
+#set the seed for a pseudo-random sample
+set.seed(2018)
+
+#simulate the tests
+for(k in 1:number.replicates){
+  
+  results.replicate = sample(c(0,1), size = number.employees,
+              prob = c(1 - prob.false.positive, prob.false.positive),
+              replace = TRUE)
+
+results[k] = sum(results.replicate)
+}
+
+#view the results
+table(results)
+```
+```{r}
+at.least.1.pos = (results >= 1)
+table(at.least.1.pos)
+```
+#5 
+
+#a)  The specificity of a test is the probability of a true negative result, which equals 1 minus the probability of a false positive.
+
+#b)  If none of the women have breast cancer, the probability that no more than 1 woman tests positive (i.e., false positive) is 0.28.
+
+```{r}
+#define parameters
+specificity = 0.95
+number.women = 50
+number.replicates = 100000
+
+#create empty vector to store results
+results = vector("numeric", number.replicates)
+
+#set the seed for a pseudo-random sample
+#set.seed(2018)
+
+#simulate the tests
+for(k in 1:number.replicates){
+
+  results.replicate = sample(c(0,1), size = number.women,
+                             prob = c(specificity, 1 - specificity),
+                             replace = TRUE)
+  
+results[k] = sum(results.replicate)
+
+}
+
+#view the results
+table(results)
+```
+```{r}
+at.most.1.pos = (results <= 1)
+table(at.most.1.pos)
+```
+#c)  If the probability of a false positive is 0.01 (specificity of 0.99), then the probability that no more than 1 woman will test positive is 0.91.
+
+```{r}
+#define parameters
+specificity = 0.99
+number.women = 50
+number.replicates = 100000
+
+#create empty vector to store results
+results = vector("numeric", number.replicates)
+
+#set the seed for a pseudo-random sample
+#set.seed(2018)
+
+#simulate the tests
+for(k in 1:number.replicates){
+  
+  results.replicate = sample(c(0,1), size = number.women,
+                          prob = c(specificity, 1 - specificity),
+                          replace = TRUE)
+  
+  results[k] = sum(results.replicate)
+  
+}
+
+#view the results
+table(results)
+```
+```{r}
+at.most.1.pos = (results <= 1)
+table(at.most.1.pos)
+```
+
